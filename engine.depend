@@ -1,0 +1,48 @@
+# depslib dependency file v1.0
+1414351799 source:/home/linzhe/Working/codeblock/engine/geometry.cpp
+	"geometry.h"
+
+1414351947 /home/linzhe/Working/codeblock/engine/geometry.h
+	<GL/glew.h>
+	<GL/freeglut.h>
+	<SOIL/SOIL.h>
+
+1414289577 source:/home/linzhe/Working/codeblock/engine/main.cpp
+	"mainWindow.h"
+
+1414350548 /home/linzhe/Working/codeblock/engine/mainWindow.h
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	<math.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<GL/glew.h>
+	<GL/freeglut.h>
+	"common/shader_utils.h"
+	"geometry.h"
+	"shader.h"
+
+1401633483 /home/linzhe/Working/codeblock/engine/common/shader_utils.h
+	<GL/glew.h>
+
+1414350559 /home/linzhe/Working/codeblock/engine/shader.h
+	<GL/glew.h>
+	<GL/freeglut.h>
+	"common/shader_utils.h"
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+
+1414351154 source:/home/linzhe/Working/codeblock/engine/mainWindow.cpp
+	"mainWindow.h"
+
+1414186561 source:/home/linzhe/Working/codeblock/engine/shader.cpp
+	"shader.h"
+
+1401633483 source:/home/linzhe/Working/codeblock/engine/common/shader_utils.cpp
+	<stdio.h>
+	<stdlib.h>
+	<GL/glew.h>
+
