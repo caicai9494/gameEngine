@@ -84,6 +84,8 @@ class Object2D : public Object
 	public:
 		Object2D(){matrix = glm::mat4(1.0);}
 
+		float* get_matrix() { return glm::value_ptr(matrix);}
+
 		void translate(glm::mat4 &tr) {matrix *= tr;}
 		void rotate(glm::mat4 &rt) {matrix *= rt;}
 		void scale(glm::mat4 &sc) {matrix *= sc;}
@@ -98,6 +100,7 @@ class Triangle : public Object2D
 {
     public:
 	void make_mesh();
+	void make_mesh(GLfloat* vertex, GLfloat* color);
 	~Triangle(){}
 };
 

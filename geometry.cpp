@@ -55,6 +55,41 @@ void Triangle::make_mesh()
 
 	glBindVertexArray(0);
 }
+
+void Triangle::make_mesh(GLfloat *vertex, GLfloat *color)
+{
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	glGenBuffers(3, vbo);
+	/////////////1st buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), vertex, GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(0);
+	//////
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), color, GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
+}
 ///////////////////junk
 
 /*

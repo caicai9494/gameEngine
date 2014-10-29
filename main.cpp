@@ -26,7 +26,6 @@ void free_resources();
 
 
 int main(int argc, char* argv[]) {
-
   glutInit(&argc, argv);
   glutInitContextVersion(2,0);
   glutInitDisplayMode(GLUT_RGBA|GLUT_ALPHA|GLUT_DOUBLE|GLUT_DEPTH);
@@ -58,22 +57,52 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 
+
 int init_resources()
 {
-    Triangle *tri = new Triangle();
-    tri->make_mesh();
+
+	GLfloat g_vertex_buffer_data[] = {
+		-1.0f, -1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f,
+	};
+	GLfloat g_vertex_buffer_data2[] = {
+		-1.0f, -1.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f,
+		 -1.0f, 1.0f, 0.0f,
+	};
+
+	GLfloat g_color_buffer_data[] = {
+		1.0f, 0.0f, 0.0f,
+		 0.0f, 1.0f, 0.0f,
+		 0.0f,  0.0f, 1.0f,
+	};
+
+    Triangle *tri1 = new Triangle();
+    tri1->make_mesh(g_vertex_buffer_data, g_color_buffer_data);
+
+    Triangle *tri2 = new Triangle();
+    tri2->make_mesh(g_vertex_buffer_data2, g_color_buffer_data);
+   // glm::vec3 xaxis(1.0, 0.0, 0.0);
+    //tri->rotate(glm::rotate(glm::mat4(1.0), 45.0, xaxis));
 
     Scene *sc = new Scene();
     assert(sc->initShader() == 1);
-    sc->addChild(tri);
+    sc->addChild(tri1);
+    sc->addChild(tri2);
 
     myscene = sc;
+
+  //GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
+  //if(loc != -1)
+   //   glUniformMatrix4fv(loc, 1, GL_FALSE, tri->get_matrix());
 }
 
 void onDisplay()
 {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
 
   Render *r = new Render(myscene); 
   r->drawScene();
@@ -83,6 +112,12 @@ void onDisplay()
 
 void onIdle()
 {
+  float alpha = sinf(glutGet(GLUT_ELAPSED_TIME) / 1000.0 * (2*M_PI) / 5) + 0.5;
+
+  GLint loc = glGetUniformLocation(myscene->Program(), "alpha");
+  if(loc != -1)
+      glUniform1f(loc, alpha);
+
   glutPostRedisplay();
 }
 
