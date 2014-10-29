@@ -5,13 +5,13 @@ const char* COLOR = "color";
 
 
 
-int Shader::initShader()
+int Shader::initShader(const char* vshader, const char* fshader)
 {
   GLint link_ok = GL_FALSE;
 
   GLuint vs, fs;
-  if ((vs = create_shader("triangle.v.glsl", GL_VERTEX_SHADER))   == 0) return 0;
-  if ((fs = create_shader("triangle.f.glsl", GL_FRAGMENT_SHADER)) == 0) return 0;
+  if ((vs = create_shader(vshader, GL_VERTEX_SHADER))   == 0) return 0;
+  if ((fs = create_shader(fshader, GL_FRAGMENT_SHADER)) == 0) return 0;
 
   program = glCreateProgram();
   glAttachShader(program, vs);

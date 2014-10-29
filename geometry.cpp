@@ -1,11 +1,6 @@
 #include "geometry.h"
 
-Object2D::~Object2D()
-{
-    glDeleteBuffers(3, vbo);
-    glDeleteVertexArrays(1, &vao);
-}
-
+/*
 void Triangle::make_mesh()
 {
 	glGenVertexArrays(1, &vao);
@@ -55,7 +50,19 @@ void Triangle::make_mesh()
 
 	glBindVertexArray(0);
 }
+*/
 
+Object2D::~Object2D()
+{
+    glDeleteBuffers(3, vbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
+float* View::lookAt()
+{
+    matrix = glm::lookAt(eye, target, up);
+    return glm::value_ptr(matrix);
+}
 void Triangle::make_mesh(GLfloat *vertex, GLfloat *color)
 {
 	glGenVertexArrays(1, &vao);

@@ -24,7 +24,7 @@ class Shader:public Object
 		GLuint Program() {return program;}
 		//return 0 if fail
 		//	 1 if succeed
-		int initShader();
+		int initShader(const char* vshader, const char* fshader);
 		~Shader() {glDeleteProgram(program);}
 		//return 0 if fail
 		//	 1 if succeed

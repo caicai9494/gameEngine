@@ -87,7 +87,7 @@ int init_resources()
     //tri->rotate(glm::rotate(glm::mat4(1.0), 45.0, xaxis));
 
     Scene *sc = new Scene();
-    assert(sc->initShader() == 1);
+    assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
     sc->addChild(tri1);
     sc->addChild(tri2);
 
