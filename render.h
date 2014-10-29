@@ -1,6 +1,9 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
-#include "shader.h"
+#include "scene.h"
+
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 
 class Render : public Object
 {
@@ -9,6 +12,7 @@ class Render : public Object
     public:
 	Render(Scene *sc){ _scene = sc;}
 	void drawScene();
+	~Render() {delete _scene;}
 };
 
 

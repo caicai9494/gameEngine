@@ -1,4 +1,4 @@
-#include "shader.h" 
+#include "scene.h" 
 
 const char* VERTEX = "vertex";
 const char* COLOR = "color";
@@ -29,6 +29,7 @@ int Shader::initShader()
   else 
 	  return 1;
 }
+
 
 /*
 int Shader::setupAttribute(GLint &attrID, const char* name)

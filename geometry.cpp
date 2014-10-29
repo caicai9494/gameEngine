@@ -1,5 +1,11 @@
 #include "geometry.h"
 
+Object2D::~Object2D()
+{
+    glDeleteBuffers(3, vbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
 void Triangle::make_mesh()
 {
 	glGenVertexArrays(1, &vao);

@@ -9,22 +9,23 @@
 #include "geometry.h"
 #include <vector>
 
-#ifndef __SHADER
-#define __SHADER
+#ifndef __SCENE
+#define __SCENE
 
 extern const char* VERTEX;
 extern const char* COLOR;
 
 
-class Shader
+class Shader:public Object
 {
-    private:
+    protected:
 		GLuint program;
 	public:
 		GLuint Program() {return program;}
 		//return 0 if fail
 		//	 1 if succeed
 		int initShader();
+		~Shader() {glDeleteProgram(program);}
 		//return 0 if fail
 		//	 1 if succeed
 		//int setupAttribute(GLint &attrID, const char* name);
@@ -41,6 +42,8 @@ class Scene : public Shader
 	void addChild(Object2D *obj){array.push_back(obj);}
 	Object2D* childAt(int index) {return array.at(index);}
 	int length() {return array.size();}
+
+	~Scene(){}
 };
 
 #endif

@@ -14,10 +14,49 @@
 #include "common/shader_utils.h"
 
 #include "geometry.h"
-#include "shader.h"
+#include "scene.h"
 #include "render.h"
 
 Scene *myscene;
+
+int init_resources();
+void onDisplay();
+void onIdle();
+void free_resources();
+
+
+int main(int argc, char* argv[]) {
+
+  glutInit(&argc, argv);
+  glutInitContextVersion(2,0);
+  glutInitDisplayMode(GLUT_RGBA|GLUT_ALPHA|GLUT_DOUBLE|GLUT_DEPTH);
+  glutInitWindowSize(640, 480);
+  glutCreateWindow("game engine");
+
+  GLenum glew_status = glewInit();
+  if (glew_status != GLEW_OK) {
+    fprintf(stderr, "Error: %s\n", glewGetErrorString(glew_status));
+    return 1;
+  }
+
+  if (!GLEW_VERSION_2_0) {
+    fprintf(stderr, "Error: your graphic card does not support OpenGL 2.0\n");
+    return 1;
+  }
+
+  if (init_resources()) {
+    glutDisplayFunc(onDisplay);
+    glutIdleFunc(onIdle);
+    glEnable(GL_BLEND);
+    //glEnable(GL_DEPTH);
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glutMainLoop();
+  }
+
+  free_resources();
+  return 0;
+}
 
 int init_resources()
 {
@@ -42,41 +81,12 @@ void onDisplay()
   glutSwapBuffers();
 }
 
-void free_resources()
+void onIdle()
 {
-  //glDeleteProgram(program);
-  //glDeleteBuffers(1, &vbo_triangle);
+  glutPostRedisplay();
 }
 
-int main(int argc, char* argv[]) {
-
-  glutInit(&argc, argv);
-  glutInitContextVersion(2,0);
-  glutInitDisplayMode(GLUT_RGBA|GLUT_ALPHA|GLUT_DOUBLE|GLUT_DEPTH);
-  glutInitWindowSize(640, 480);
-  glutCreateWindow("game engine");
-
-  GLenum glew_status = glewInit();
-  if (glew_status != GLEW_OK) {
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(glew_status));
-    return 1;
-  }
-
-  if (!GLEW_VERSION_2_0) {
-    fprintf(stderr, "Error: your graphic card does not support OpenGL 2.0\n");
-    return 1;
-  }
-
-  if (init_resources()) {
-    glutDisplayFunc(onDisplay);
-    //glutIdleFunc(idle);
-    glEnable(GL_BLEND);
-    //glEnable(GL_DEPTH);
-    glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glutMainLoop();
-  }
-
-  free_resources();
-  return 0;
+void free_resources()
+{
+  delete myscene;
 }

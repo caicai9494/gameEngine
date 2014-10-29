@@ -1,6 +1,6 @@
 LDLIBS=-lglut -lGLEW -lGL -lSOIL
 CFLAGs=-c -Wall -g
-SRC= render.cpp main.cpp geometry.cpp shader.cpp
+SRC= render.cpp main.cpp geometry.cpp scene.cpp
 OBJ=$(SRC:.cpp=.o)
 EXE=triangle
 

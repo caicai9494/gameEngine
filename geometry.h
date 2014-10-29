@@ -68,7 +68,12 @@ class Cube : public Geometry
 };
 */
 
-class Object{};
+class Object
+{
+    public:
+	Object(){}
+	virtual ~Object(){}
+};
 
 class Object2D : public Object
 {
@@ -78,18 +83,22 @@ class Object2D : public Object
 		GLuint vbo[3];
 	public:
 		Object2D(){matrix = glm::mat4(1.0);}
+
 		void translate(glm::mat4 &tr) {matrix *= tr;}
 		void rotate(glm::mat4 &rt) {matrix *= rt;}
 		void scale(glm::mat4 &sc) {matrix *= sc;}
 		virtual void make_mesh() = 0;
 
 		GLuint VAO() {return vao;}
+		~Object2D();
+
 };
 
 class Triangle : public Object2D
 {
     public:
 	void make_mesh();
+	~Triangle(){}
 };
 
 
