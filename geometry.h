@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+/*
 struct _attribute{
 	GLfloat coord2d[3];
 	GLfloat color3d[3];
@@ -65,6 +66,7 @@ class Cube : public Geometry
 
 		virtual void load_texture(const char* name, int &width, int &height);
 };
+*/
 
 class Object{};
 

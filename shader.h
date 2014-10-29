@@ -18,15 +18,17 @@ extern const char* COLOR;
 
 class Shader
 {
-	public:
+    private:
 		GLuint program;
+	public:
+		GLuint Program() {return program;}
 		//return 0 if fail
 		//	 1 if succeed
 		int initShader();
 		//return 0 if fail
 		//	 1 if succeed
-		int setupAttribute(GLint &attrID, const char* name);
-		int setupUniform(GLint &uniformID, const char* name);
+		//int setupAttribute(GLint &attrID, const char* name);
+		//int setupUniform(GLint &uniformID, const char* name);
 		//int setupTexture(GLenum context, GLint &uniformID, const char* name);
 };
 

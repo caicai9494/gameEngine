@@ -23,6 +23,7 @@
 
 #include "geometry.h"
 #include "shader.h"
+#include "render.h"
 
 
 class MainWindow
@@ -39,6 +40,7 @@ class MainWindow
 		void free_resources();
 		void Display();
 		void onIdle();
+		Scene *myscene;
 };
 
 

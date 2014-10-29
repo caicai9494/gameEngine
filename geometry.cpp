@@ -51,6 +51,7 @@ void Triangle::make_mesh()
 }
 ///////////////////junk
 
+/*
 void Geometry::set_attribute_buffer()
 {
   Attributes triangle_attributes[] = {
@@ -68,7 +69,6 @@ void Geometry::draw_buffer()
 {
   glEnableVertexAttribArray(attribute_vertex);
   glEnableVertexAttribArray(attribute_color);
-  /* Describe our vertices array to OpenGL (it can't guess its format automatically) */
 
   //glUniform1f(triangle->uniform_fade, 1.0);
   glBindBuffer(GL_ARRAY_BUFFER, vboID);
@@ -93,7 +93,6 @@ void Geometry::draw_buffer()
   );
 
 
-  /* Push each element in buffer_vertices to the vertex shader */
   glDrawArrays(GL_TRIANGLES, 0, 3);
 
   glDisableVertexAttribArray(attribute_vertex);
@@ -109,19 +108,16 @@ void Cube::set_attribute_buffer()
      1.0,  1.0,  1.0,
     -1.0,  1.0,  1.0//,
     // back
-    /*
     -1.0, -1.0, -1.0,
      1.0, -1.0, -1.0,
      1.0,  1.0, -1.0,
     -1.0,  1.0, -1.0,
-    */
   };
 
   glGenBuffers(1, &vertexID);
   glBindBuffer(GL_ARRAY_BUFFER, vertexID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_STATIC_DRAW);
 
-  /*
   GLfloat cube_colors[] = {
     // front colors
     1.0, 0.0, 0.0,
@@ -138,7 +134,6 @@ void Cube::set_attribute_buffer()
   glBindBuffer(GL_ARRAY_BUFFER, colorID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(cube_colors), cube_colors, GL_STATIC_DRAW);
 
-  */
   GLfloat texture_coord[] = {
     // front colors
     0.0, 0.0,
@@ -146,12 +141,10 @@ void Cube::set_attribute_buffer()
     1.0, 1.0,
     0.0, 1.0//,
     // back colors
-    /*
     1.0, 0.0, 0.0,
     0.0, 1.0, 0.0,
     0.0, 0.0, 1.0,
     1.0, 1.0, 1.0,
-    */
   };
   glGenBuffers(1, &texture->textureCoordID);
   glBindBuffer(GL_ARRAY_BUFFER, texture->textureCoordID);
@@ -162,7 +155,6 @@ void Cube::set_attribute_buffer()
     0, 1, 2,
     2, 3, 0
     // top
-    /*
     1, 5, 6,
     6, 2, 1,
     // back
@@ -177,7 +169,6 @@ void Cube::set_attribute_buffer()
     // right
     3, 2, 6,
     6, 7, 3,
-    */
   };
   glGenBuffers(1, &indexID);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
@@ -191,10 +182,9 @@ void Cube::draw_buffer()
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture->textureID);
-  glUniform1i(texture->uniform_texture, /*GL_TEXTURE*/0);
+  glUniform1i(texture->uniform_texture, 0);
 
   glEnableVertexAttribArray(attribute_vertex);
-  /* Describe our vertices array to OpenGL (it can't guess its format automatically) */
 
   //glUniform1f(triangle->uniform_fade, 1.0);
   glBindBuffer(GL_ARRAY_BUFFER, vertexID);
@@ -207,7 +197,6 @@ void Cube::draw_buffer()
     0                  // offset of first element
   );
 
-  /*
   glEnableVertexAttribArray(attribute_color);
 
   glBindBuffer(GL_ARRAY_BUFFER, colorID);
@@ -219,7 +208,6 @@ void Cube::draw_buffer()
     0,                 // no extra data between each position
     0                  // offset of first element
   );
-  */
 
   glEnableVertexAttribArray(texture->attribute_texture_coord);
 
@@ -255,3 +243,4 @@ void Cube::load_texture(const char* name, int &width, int &height)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img); // target
 }
+*/

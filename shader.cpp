@@ -4,6 +4,7 @@ const char* VERTEX = "vertex";
 const char* COLOR = "color";
 
 
+
 int Shader::initShader()
 {
   GLint link_ok = GL_FALSE;
@@ -29,6 +30,7 @@ int Shader::initShader()
 	  return 1;
 }
 
+/*
 int Shader::setupAttribute(GLint &attrID, const char* name)
 {
   attrID = glGetAttribLocation(program, name);
@@ -50,4 +52,4 @@ int Shader::setupUniform(GLint &uniformID, const char* name)
   }
   else return 1;
 }
-
+*/

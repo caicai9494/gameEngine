@@ -20,22 +20,31 @@ int MainWindow::init_resources()
  //triangle = new Geometry();
  //triangle->set_attribute_buffer();
  //
- cube = new Cube();
+// cube = new Cube();
  //cube->set_attribute_buffer();
- cube->load_texture("text01.jpg",
-	 cube->texture->width,
-	 cube->texture->height);
- cube->set_attribute_buffer();
+ //cube->load_texture("text01.jpg",
+//	 cube->texture->width,
+//	 cube->texture->height);
+ //cube->set_attribute_buffer();
 
- shader = new Shader();
- assert(shader->initShader() == 1);
- assert(shader->setupAttribute(cube->attribute_vertex, "vertex_position") == 1);
+ //shader = new Shader();
+ //assert(shader->initShader() == 1);
+ //assert(shader->setupAttribute(cube->attribute_vertex, "vertex_position") == 1);
  //assert(shader->setupAttribute(cube->attribute_color, "vertex_color") == 1);
- assert(shader->setupAttribute(cube->texture->attribute_texture_coord, "vertex_texture") == 1);
+ //assert(shader->setupAttribute(cube->texture->attribute_texture_coord, "vertex_texture") == 1);
 
- assert(shader->setupUniform(cube->texture->uniform_texture, "texture") == 1);
+ //assert(shader->setupUniform(cube->texture->uniform_texture, "texture") == 1);
  //
- assert(shader->setupUniform(cube->uniform_mvp, "MVP") == 1);
+// assert(shader->setupUniform(cube->uniform_mvp, "MVP") == 1);
+
+    Triangle *tri = new Triangle();
+    tri->make_mesh();
+
+    Scene *sc = new Scene();
+    sc->initShader();
+    sc->addChild(tri);
+
+    myscene = sc;
 
 
   return 1;
@@ -47,15 +56,19 @@ void MainWindow::Display()
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glUseProgram(shader->program);
+  //glUseProgram(shader->program);
 
-  cube->draw_buffer();
+  //cube->draw_buffer();
+  
+  Render *r = new Render(myscene); 
+  r->drawScene();
 
   glutSwapBuffers();
 }
 
 void MainWindow::onIdle()
 {
+    /*
 	//float move = sinf(glutGet(GLUT_ELAPSED_TIME) / 1000.0 * (2*M_PI) / 5.0);
 	float angle = glutGet(GLUT_ELAPSED_TIME) /  300.0;
 	//glm::mat4 m_transform = glm::translate(glm::mat4(1.0f), glm::vec3(move, 0, 0)) *
@@ -70,17 +83,21 @@ void MainWindow::onIdle()
 	//glUniform1f(triangle->uniform_fade, move);
 	//glUniformMatrix4fv(cube->uniform_transform, 1, GL_FALSE, glm::value_ptr(m_transform));
 	glutPostRedisplay();
+	*/
 }
 
 
 void MainWindow::free_resources()
 {
+    /*
   glDeleteProgram(shader->program);
   glDeleteBuffers(1, &cube->vertexID);
   //glDeleteBuffers(1, &cube->colorID);
   glDeleteBuffers(1, &cube->indexID);
   glDeleteBuffers(1, &cube->texture->textureCoordID);
   glDeleteTextures(1, &cube->texture->textureID);
+  */
 }
+
 
 

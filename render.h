@@ -1,13 +1,13 @@
-#ifndef __RENDER.H__
-#define __RENDER.H__
+#ifndef __RENDER_H__
+#define __RENDER_H__
 #include "shader.h"
 
-class render : public object
+class Render : public Object
 {
     private:
-	scene *_scene;
+	Scene *_scene;
     public:
-	render(scene *sc){ _scene = sc;}
+	Render(Scene *sc){ _scene = sc;}
 	void drawScene();
 };
 
