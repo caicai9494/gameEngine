@@ -1,4 +1,7 @@
-#include "shader.h"
+#include "shader.h" 
+
+const char* VERTEX = "vertex";
+const char* COLOR = "color";
 
 
 int Shader::initShader()
@@ -12,6 +15,8 @@ int Shader::initShader()
   program = glCreateProgram();
   glAttachShader(program, vs);
   glAttachShader(program, fs);
+  glBindAttribLocation(program, 0, VERTEX);
+  glBindAttribLocation(program, 1, COLOR);
   glLinkProgram(program);
   glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
 
@@ -45,3 +50,4 @@ int Shader::setupUniform(GLint &uniformID, const char* name)
   }
   else return 1;
 }
+

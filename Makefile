@@ -15,7 +15,7 @@ EXE=triangle
 #triangle: ../common/shader_utils.o
 
 all:
-	g++ $(SRC) $(CFLAGS) $(LDLIBS) -o $(EXE) ../common/shader_utils.o 
+	g++ $(SRC) $(CFLAGS) $(LDLIBS) -o $(EXE) common/shader_utils.o 
 
 clean:
 	rm -f *.o $(EXE)

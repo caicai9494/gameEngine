@@ -7,6 +7,8 @@ MainWindow::MainWindow(int width, int height, const char* name, int argc, char* 
   windowW = width;
   windowH = height;
 
+  printf("%s", VERTEX);
+
   glutInit(&argc, argv);
   glutInitContextVersion(2,0);
   glutInitDisplayMode(GLUT_RGBA|GLUT_ALPHA|GLUT_DOUBLE|GLUT_DEPTH);

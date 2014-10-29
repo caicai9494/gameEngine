@@ -5,6 +5,10 @@
 #include <GL/freeglut.h>
 
 #include <SOIL/SOIL.h>
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 struct _attribute{
 	GLfloat coord2d[3];
@@ -54,12 +58,36 @@ class Cube : public Geometry
 		GLuint colorID;
 		GLuint indexID;
 
-		Texture *texture = new Texture();
+		Texture *texture = new Texture;
 
 		virtual void set_attribute_buffer();
 		virtual void draw_buffer();
 
 		virtual void load_texture(const char* name, int &width, int &height);
 };
+
+class Object{};
+
+class Object2D : public Object
+{
+	private:
+		glm::mat4 matrix;
+	public:
+		Object2D(){matrix = glm::mat4(1.0);}
+		void translate(glm::mat4 &tr) {matrix *= tr;}
+		void rotate(glm::mat4 &rt) {matrix *= rt;}
+		void scale(glm::mat4 &sc) {matrix *= sc;}
+		virtual void make_mesh() = 0;
+};
+
+class Triangle : public Object2D
+{
+    private:
+	GLuint vao;
+	GLuint vbo[3];
+    public:
+	void make_mesh();
+};
+
 
 #endif
