@@ -36,7 +36,9 @@ class Scene : public Shader
     private:
     	vector array;
     public:
-	void add(Object2D *obj){array.push_back(obj);}
+	void addChild(Object2D *obj){array.push_back(obj);}
+	Object2D* childAt(int index) {return array.at(index);}
+	int length() {return array.size();}
 };
 
 #endif

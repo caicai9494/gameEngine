@@ -248,7 +248,6 @@ void Cube::draw_buffer()
 
 void Cube::load_texture(const char* name, int &width, int &height)
 {
-  texture = new Texture;
 
   unsigned char* img = SOIL_load_image(name, &width, &height, NULL, 0);
   glGenTextures(1, &texture->textureID);

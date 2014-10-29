@@ -70,21 +70,22 @@ class Object{};
 
 class Object2D : public Object
 {
-	private:
+	protected:
 		glm::mat4 matrix;
+		GLuint vao;
+		GLuint vbo[3];
 	public:
 		Object2D(){matrix = glm::mat4(1.0);}
 		void translate(glm::mat4 &tr) {matrix *= tr;}
 		void rotate(glm::mat4 &rt) {matrix *= rt;}
 		void scale(glm::mat4 &sc) {matrix *= sc;}
 		virtual void make_mesh() = 0;
+
+		GLuint VAO() {return vao;}
 };
 
 class Triangle : public Object2D
 {
-    private:
-	GLuint vao;
-	GLuint vbo[3];
     public:
 	void make_mesh();
 };
