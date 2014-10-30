@@ -56,6 +56,18 @@ class Square : public Object2D
 	~Square(){}
 };
 
+class Cube : public Object2D
+{
+    public:
+	void make_mesh();
+	~Cube(){}
+};
 
+class Column : public Object2D
+{
+    public:
+	void make_mesh(int vertical, int horizontal);
+	~Column(){}
+};
 
 #endif

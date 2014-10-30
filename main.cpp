@@ -16,16 +16,18 @@
 #include "geometry.h"
 #include "scene.h"
 #include "render.h"
+#include "view.h"
 
 Scene *myscene;
 
 int init_resources();
 void onDisplay();
 void onIdle();
+void onReshape(int width, int height);
 void free_resources();
 
-const int WIDTH = 640;
-const int HEIGHT = 480;
+int WIDTH = 640;
+int HEIGHT = 480;
 
 
 int main(int argc, char* argv[]) {
@@ -48,10 +50,12 @@ int main(int argc, char* argv[]) {
 
   if (init_resources()) {
     glutDisplayFunc(onDisplay);
+    glutReshapeFunc(onReshape);
     glutIdleFunc(onIdle);
     glEnable(GL_BLEND);
     //glEnable(GL_DEPTH);
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glutMainLoop();
   }
@@ -64,27 +68,18 @@ int main(int argc, char* argv[]) {
 int init_resources()
 {
 
-	GLfloat g_vertex_buffer_data[] = {
-		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		 1.0f,  1.0f, 0.0f,
-	};
-	GLfloat g_vertex_buffer_data2[] = {
-		-1.0f, -1.0f, 0.0f,
-		 1.0f,  1.0f, 0.0f,
-		 -1.0f, 1.0f, 0.0f,
-	};
 
-	GLfloat g_color_buffer_data[] = {
-		1.0f, 0.0f, 0.0f,
-		 0.0f, 1.0f, 0.0f,
-		 0.0f,  0.0f, 1.0f,
-	};
+    Cube *c = new Cube();
+    c->make_mesh();
 
-    //Triangle *tri1 = new Triangle();
-    //tri1->make_mesh();
     Square *sq = new Square();
     sq->make_mesh();
+
+    View *camera = new View();
+    glm::vec3 eye(0,1,-2);
+    glm::vec3 target(0,0,0);
+    //camera->Eye(eye);
+
 
     //Triangle *tri2 = new Triangle();
     //tri2->make_mesh(g_vertex_buffer_data2, g_color_buffer_data);
@@ -93,15 +88,15 @@ int init_resources()
 
     Scene *sc = new Scene();
     assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
-    //sc->addChild(tri1);
-    //sc->addChild(tri2);
-    sc->addChild(sq);
+    sc->addChild(c);
 
     myscene = sc;
 
-  //GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
-  //if(loc != -1)
-   //   glUniformMatrix4fv(loc, 1, GL_FALSE, tri->get_matrix());
+
+    //GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
+    //assert(loc != -1);
+     //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(vvv));
+
 }
 
 void onDisplay()
@@ -109,6 +104,16 @@ void onDisplay()
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+  //glm::mat4 vvv = glm::lookAt(glm::vec3(0,0,2), glm::vec3(0,0,0), glm::vec3(0,1,0));
+
+  //glm::mat4 mvp(1.0f);
+  /*
+  glm::mat4 mvp = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,5));
+  //glm::rotate(mvp, 45.0f, 0.0f,1.0f,0.0f);
+  GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
+  if(loc != -1)
+      glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
+      */
 
   Render *r = new Render(myscene); 
   r->drawScene();
@@ -118,13 +123,49 @@ void onDisplay()
 
 void onIdle()
 {
-  float alpha = sinf(glutGet(GLUT_ELAPSED_TIME) / 1000.0 * (2*M_PI) / 5) + 0.5;
+  float angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * 45;  // 45° per second
+  glm::vec3 axis_y(0, 1, 0);
+  glm::mat4 anim = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis_y);
 
+  glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -4.0));
+  glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
+  glm::mat4 projection = glm::perspective(45.0f, 1.0f*WIDTH/HEIGHT, 0.1f, 10.0f);
+
+  glm::mat4 mvp = projection * view * model * anim;
+
+  glUseProgram(myscene->Program());
+  GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
+  //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+  glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
+  /*
+  float alpha = sinf(glutGet(GLUT_ELAPSED_TIME) / 1000.0 * (2*M_PI) / 5) + 0.5;
+  float angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 ;
+  glm::vec3 yaxis(0,1,0);
+
+  glm::mat4 v = glm::lookAt(glm::vec3(0,0,1), glm::vec3(0,0,0), glm::vec3(0,1,0));
+  glm::mat4 mvp = glm::rotate(glm::mat4(1.0f), angle, yaxis);
+
+  glUseProgram(myscene->Program());
   GLint loc = glGetUniformLocation(myscene->Program(), "alpha");
   if(loc != -1)
-      glUniform1f(loc, alpha);
+      //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
+      glUniform1f(loc, 1.0);
+
+  loc = glGetUniformLocation(myscene->Program(), "mvp");
+  if(loc != -1)
+      glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(v * mvp));
+      //glUniform1f(loc, alpha);
+      */
+
 
   glutPostRedisplay();
+}
+
+void onReshape(int width, int height)
+{
+    WIDTH = width;
+    HEIGHT = height;
+    glViewport(0,0,WIDTH, HEIGHT);
 }
 
 void free_resources()
