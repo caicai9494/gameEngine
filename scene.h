@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #include "geometry.h"
+#include "view.h"
 #include <vector>
 
 #ifndef __SCENE
@@ -38,10 +39,13 @@ class Scene : public Shader
     typedef std::vector<Object2D*> vector;
     private:
     	vector array;
+	View *view;
     public:
 	void addChild(Object2D *obj){array.push_back(obj);}
 	Object2D* childAt(int index) {return array.at(index);}
 	int length() {return array.size();}
+
+	void addView(View *v) { view = v;}
 
 	~Scene(){}
 };

@@ -18,25 +18,6 @@ class Object
 	virtual ~Object(){}
 };
 
-class View : public Object
-{
-	protected:
-		glm::mat4 matrix;
-		glm::vec3 eye;
-		glm::vec3 target;
-		glm::vec3 up;
-	public:
-		View(){up = glm::vec3(0, 1, 0); matrix = glm::mat4(1.0);}
-
-		float* lookAt();
-		
-		void Eye(glm::vec3 &e) { eye = e;}
-		void Target(glm::vec3 &t) { eye = t;}
-
-
-};
-
-
 
 class Object2D : public Object
 {
@@ -44,6 +25,7 @@ class Object2D : public Object
 		glm::mat4 matrix;
 		GLuint vao;
 		GLuint vbo[3];
+		GLuint ibo;
 	public:
 
 		Object2D(){matrix = glm::mat4(1.0);}
@@ -62,10 +44,18 @@ class Object2D : public Object
 class Triangle : public Object2D
 {
     public:
-	//void make_mesh();
+	void make_mesh();
 	void make_mesh(GLfloat* vertex, GLfloat* color);
 	~Triangle(){}
 };
+
+class Square : public Object2D
+{
+    public:
+	void make_mesh();
+	~Square(){}
+};
+
 
 
 #endif

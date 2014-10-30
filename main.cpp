@@ -24,12 +24,15 @@ void onDisplay();
 void onIdle();
 void free_resources();
 
+const int WIDTH = 640;
+const int HEIGHT = 480;
+
 
 int main(int argc, char* argv[]) {
   glutInit(&argc, argv);
   glutInitContextVersion(2,0);
   glutInitDisplayMode(GLUT_RGBA|GLUT_ALPHA|GLUT_DOUBLE|GLUT_DEPTH);
-  glutInitWindowSize(640, 480);
+  glutInitWindowSize(WIDTH, HEIGHT);
   glutCreateWindow("game engine");
 
   GLenum glew_status = glewInit();
@@ -78,18 +81,21 @@ int init_resources()
 		 0.0f,  0.0f, 1.0f,
 	};
 
-    Triangle *tri1 = new Triangle();
-    tri1->make_mesh(g_vertex_buffer_data, g_color_buffer_data);
+    //Triangle *tri1 = new Triangle();
+    //tri1->make_mesh();
+    Square *sq = new Square();
+    sq->make_mesh();
 
-    Triangle *tri2 = new Triangle();
-    tri2->make_mesh(g_vertex_buffer_data2, g_color_buffer_data);
+    //Triangle *tri2 = new Triangle();
+    //tri2->make_mesh(g_vertex_buffer_data2, g_color_buffer_data);
    // glm::vec3 xaxis(1.0, 0.0, 0.0);
     //tri->rotate(glm::rotate(glm::mat4(1.0), 45.0, xaxis));
 
     Scene *sc = new Scene();
     assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
-    sc->addChild(tri1);
-    sc->addChild(tri2);
+    //sc->addChild(tri1);
+    //sc->addChild(tri2);
+    sc->addChild(sq);
 
     myscene = sc;
 
