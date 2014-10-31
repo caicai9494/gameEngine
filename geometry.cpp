@@ -261,66 +261,77 @@ void Cube::make_mesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Column::make_mesh(int vertical, int horizontal)
+void Cylinder::make_mesh(float height, float radius, int vstack, int hstack)
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	vectorFloat g_vertex_buffer_data;
+	vectorFloat g_color_buffer_data;
+	vectorUbyte cylinder_elements;
 
-	GLfloat g_vertex_buffer_data[] = {
-    -1.0, -1.0,  1.0,
-     1.0, -1.0,  1.0,
-     1.0,  1.0,  1.0,
-    -1.0,  1.0,  1.0,
-    // back
-    -1.0, -1.0, -1.0,
-     1.0, -1.0, -1.0,
-     1.0,  1.0, -1.0,
-    -1.0,  1.0, -1.0,
-	};
 
-	GLfloat g_color_buffer_data[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0,
-    1.0, 1.0, 1.0,
-    // back colors
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0,
-    1.0, 1.0, 1.0,
-	};
+	float seg_angle = 2.0 * M_PI / hstack;
+	
+	
+	float seg_height = height * 1.0 / vstack;
 
-	GLubyte square_elements[] = {
-    // front
-    0, 1, 2,
-    2, 3, 0,
-    // top
-    1, 5, 6,
-    6, 2, 1,
-    // back
-    7, 6, 5,
-    5, 4, 7,
-    // bottom
-    4, 0, 3,
-    3, 7, 4,
-    // left
-    4, 5, 1,
-    1, 0, 4,
-    // right
-    3, 2, 6,
-    6, 7, 3,
-	};
+	for(int h = 0; h < hstack; h++)
+	{
+	    for(int v = 0; v < vstack; v++)
+	    {
+		g_vertex_buffer_data.push_back(radius * cos(seg_angle * h));
+		g_vertex_buffer_data.push_back(height / 2.0 - seg_height * v);
+		g_vertex_buffer_data.push_back(radius * sin(seg_angle * h));
+
+		g_color_buffer_data.push_back(1);
+		g_color_buffer_data.push_back(0);
+		g_color_buffer_data.push_back(0);
+		/*
+		g_vertex_buffer_data[h * vstack + v + 0] = cos(seg_angle * h);
+		g_vertex_buffer_data[h * 3*vstack + v] [ 1] = height / 2.0 - seg_height * v;
+		g_vertex_buffer_data[h * 3*vstack + v] [ 2] = sin(seg_angle * h);
+		*/
+
+	    }
+	}
+
+	/*
+		cylinder_elements.push_back(0);
+		cylinder_elements.push_back(1);
+		cylinder_elements.push_back(vstack+1);
+
+		cylinder_elements.push_back(0);
+		cylinder_elements.push_back(vstack+1);
+		cylinder_elements.push_back(vstack);
+		*/
+
+	for(int h = 0; h < 12; h++)
+	{
+	    for(int v = 0; v < vstack; v++)
+	    {
+		cylinder_elements.push_back(h * vstack + v);
+		cylinder_elements.push_back(h * vstack + v+1);
+		cylinder_elements.push_back((h+1)*vstack + v+1);
+
+		cylinder_elements.push_back(h*vstack + v);
+		cylinder_elements.push_back((h+1)*vstack + v+1);
+		cylinder_elements.push_back((h+1)*vstack + v);
+
+	    }
+	}
+
+
 
 	glGenBuffers(1, &ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_elements), square_elements, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cylinder_elements.size() * sizeof(GLubyte), &cylinder_elements[0], GL_STATIC_DRAW);
 
 	glGenBuffers(3, vbo);
 
 	/////////////1st buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(GLfloat), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -334,7 +345,82 @@ void Column::make_mesh(int vertical, int horizontal)
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, g_color_buffer_data.size()*sizeof(GLfloat), &g_color_buffer_data[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Circle::make_mesh(float radius, int stack)
+{
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	vectorFloat g_vertex_buffer_data;
+	vectorFloat g_color_buffer_data;
+	vectorUbyte circle_elements;
+
+	float seg_angle = 2.0 * M_PI / stack; 
+
+	for(int i = 0; i < stack; i++)
+	{
+	    g_vertex_buffer_data.push_back(radius * cos(seg_angle * i));
+	    g_vertex_buffer_data.push_back(0);
+	    g_vertex_buffer_data.push_back(radius * sin(seg_angle * i));
+
+	    g_color_buffer_data.push_back(1);
+	    g_color_buffer_data.push_back(0);
+	    g_color_buffer_data.push_back(0);
+	}
+	g_vertex_buffer_data.push_back(0);
+	g_vertex_buffer_data.push_back(0);
+	g_vertex_buffer_data.push_back(0);
+
+	g_color_buffer_data.push_back(1);
+	g_color_buffer_data.push_back(0);
+	g_color_buffer_data.push_back(0);
+
+
+	for(int i = 0; i < stack; i++)
+	{
+	   circle_elements.push_back(stack + 1);
+	   circle_elements.push_back(i);
+	   circle_elements.push_back((i+1) %stack);
+	}
+
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, circle_elements.size() * sizeof(GLubyte), &circle_elements[0], GL_STATIC_DRAW);
+
+	glGenBuffers(3, vbo);
+
+	/////////////1st buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(GLfloat), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(0);
+	//////
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, g_color_buffer_data.size() * sizeof(GLfloat),  &g_color_buffer_data[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(
 		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -360,7 +446,7 @@ void Geometry::set_attribute_buffer()
   };
 ///////////////////junk
 
-/*
+/
 void Geometry::set_attribute_buffer()
 {
   Attributes triangle_attributes[] = {

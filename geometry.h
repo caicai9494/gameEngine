@@ -10,6 +10,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <math.h>
+#include <iostream>
+#include <vector>
+
+
+typedef std::vector<GLubyte> vectorUbyte;
+typedef std::vector<GLfloat> vectorFloat;
 
 class Object
 {
@@ -56,6 +63,13 @@ class Square : public Object2D
 	~Square(){}
 };
 
+class Circle : public Object2D
+{
+    public:
+	void make_mesh(float radius, int stack);
+	~Circle(){}
+};
+
 class Cube : public Object2D
 {
     public:
@@ -63,11 +77,11 @@ class Cube : public Object2D
 	~Cube(){}
 };
 
-class Column : public Object2D
+class Cylinder : public Object2D
 {
     public:
-	void make_mesh(int vertical, int horizontal);
-	~Column(){}
+	void make_mesh(float height, float radius, int vstack, int hstack);
+	~Cylinder(){}
 };
 
 #endif

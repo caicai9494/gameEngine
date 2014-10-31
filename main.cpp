@@ -75,6 +75,12 @@ int init_resources()
     Square *sq = new Square();
     sq->make_mesh();
 
+    Cylinder *cyl = new Cylinder();
+    cyl->make_mesh(2.0, 2.0, 20, 20);
+
+    Circle *cic = new Circle();
+    cic->make_mesh(2, 40);
+
     View *camera = new View();
     glm::vec3 eye(0,1,-2);
     glm::vec3 target(0,0,0);
@@ -88,7 +94,7 @@ int init_resources()
 
     Scene *sc = new Scene();
     assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
-    sc->addChild(c);
+    sc->addChild(cyl);
 
     myscene = sc;
 
