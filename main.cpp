@@ -76,7 +76,7 @@ int init_resources()
     sq->make_mesh();
 
     Cylinder *cyl = new Cylinder();
-    cyl->make_mesh(2.0, 2.0, 20, 20);
+    cyl->make_mesh(2.0, 0.1, 3, 80);
 
     Circle *cic = new Circle();
     cic->make_mesh(2, 40);

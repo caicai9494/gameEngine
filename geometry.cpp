@@ -261,7 +261,7 @@ void Cube::make_mesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Cylinder::make_mesh(float height, float radius, int vstack, int hstack)
+void Cylinder::make_mesh(float height, float up_radius, float down_radius, int hstack)
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -273,12 +273,25 @@ void Cylinder::make_mesh(float height, float radius, int vstack, int hstack)
 
 	float seg_angle = 2.0 * M_PI / hstack;
 	
-	
-	float seg_height = height * 1.0 / vstack;
 
-	for(int h = 0; h < hstack; h++)
+	for(int h = 0; h < 2*hstack; h++)
 	{
-	    for(int v = 0; v < vstack; v++)
+	        int sign = (h < hstack)? 1 : -1;
+		int radius = (h < hstack) ? up_radius : down_radius;
+
+		g_vertex_buffer_data.push_back(radius * cos(seg_angle * h));
+		g_vertex_buffer_data.push_back(sign * height / 2.0);
+		g_vertex_buffer_data.push_back(radius * sin(seg_angle * h));
+
+		g_color_buffer_data.push_back(1);
+		g_color_buffer_data.push_back(0);
+		g_color_buffer_data.push_back(0);
+	}
+
+	/*
+	for(int v = 0; v < vstack; v++)
+	{
+	    for(int h = 0; h < hstack; h++)
 	    {
 		g_vertex_buffer_data.push_back(radius * cos(seg_angle * h));
 		g_vertex_buffer_data.push_back(height / 2.0 - seg_height * v);
@@ -287,14 +300,13 @@ void Cylinder::make_mesh(float height, float radius, int vstack, int hstack)
 		g_color_buffer_data.push_back(1);
 		g_color_buffer_data.push_back(0);
 		g_color_buffer_data.push_back(0);
-		/*
 		g_vertex_buffer_data[h * vstack + v + 0] = cos(seg_angle * h);
 		g_vertex_buffer_data[h * 3*vstack + v] [ 1] = height / 2.0 - seg_height * v;
 		g_vertex_buffer_data[h * 3*vstack + v] [ 2] = sin(seg_angle * h);
-		*/
 
 	    }
 	}
+	*/
 
 	/*
 		cylinder_elements.push_back(0);
@@ -306,20 +318,33 @@ void Cylinder::make_mesh(float height, float radius, int vstack, int hstack)
 		cylinder_elements.push_back(vstack);
 		*/
 
-	for(int h = 0; h < 12; h++)
+	/*
+	for(int v = 0; v < vstack-1; v++)
 	{
-	    for(int v = 0; v < vstack; v++)
+	    for(int h = 0; h < hstack; h++)
 	    {
-		cylinder_elements.push_back(h * vstack + v);
-		cylinder_elements.push_back(h * vstack + v+1);
-		cylinder_elements.push_back((h+1)*vstack + v+1);
+		cylinder_elements.push_back(v * (hstack) + h);
+		cylinder_elements.push_back((v+1)*(hstack) + (h+1) % hstack);
+		cylinder_elements.push_back((v+1)*(hstack) + h);
 
-		cylinder_elements.push_back(h*vstack + v);
-		cylinder_elements.push_back((h+1)*vstack + v+1);
-		cylinder_elements.push_back((h+1)*vstack + v);
+		cylinder_elements.push_back(v * (hstack) + h);
+		cylinder_elements.push_back(v*(hstack) + (h+1)%hstack);
+		cylinder_elements.push_back((v+1)*(hstack) + (h+1)%hstack);
 
 	    }
 	}
+	*/
+	for(int h = 0; h < hstack; h++)
+	{
+		cylinder_elements.push_back(0 * (hstack) + h);
+		cylinder_elements.push_back((0+1)*(hstack) + h);
+		cylinder_elements.push_back((0+1)*(hstack) + (h+1) % hstack);
+
+		cylinder_elements.push_back(0 * (hstack) + h);
+		cylinder_elements.push_back((0+1)*(hstack) + (h+1)%hstack);
+		cylinder_elements.push_back(0*(hstack) + (h+1)%hstack);
+	}
+
 
 
 

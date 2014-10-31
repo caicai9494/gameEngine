@@ -80,7 +80,7 @@ class Cube : public Object2D
 class Cylinder : public Object2D
 {
     public:
-	void make_mesh(float height, float radius, int vstack, int hstack);
+	void make_mesh(float height, float up_radius, float down_radius, int hstack);
 	~Cylinder(){}
 };
 
