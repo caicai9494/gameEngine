@@ -1,5 +1,16 @@
 #include "geometry.h"
 
+void Object2D::add_texture(const char* file)
+{
+    int img_w, img_h;
+    unsigned char* img = SOIL_load_image(file, &img_w, &img_h, NULL, 0);
+
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_w, img_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+}
+
 void Triangle::make_mesh()
 {
 	glGenVertexArrays(1, &vao);
@@ -16,6 +27,13 @@ void Triangle::make_mesh()
 		1.0f, 0.0f, 0.0f,
 		 0.0f, 1.0f, 0.0f,
 		 0.0f,  0.0f, 1.0f,
+	};
+
+	GLfloat g_uv_data[] = {
+	    0.0f, 0.0f,
+	    1.0f, 0.0f,
+	    0.5f, 1.0f,
+
 	};
 	
 	GLubyte triangle_elements[] = {
@@ -54,6 +72,18 @@ void Triangle::make_mesh()
 		(void*)0            // array buffer offset
 	);
 	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_data), g_uv_data, GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		2,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		2,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -131,6 +161,13 @@ void Square::make_mesh()
 		1.0f, 0.0f, 0.0f,
 	};
 
+	GLfloat g_uv_buffer_data[] = {
+	    0.0f, 0.0f,
+	    1.0f, 0.0f,
+	    1.0f, 1.0f,
+	    0.0f, 1.0f,
+	};
+
 	GLubyte square_elements[] = {
 		0, 1, 2,
 		0, 2, 3
@@ -168,6 +205,18 @@ void Square::make_mesh()
 		(void*)0            // array buffer offset
 	);
 	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		2,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1414551456 source:/home/linzhe/Working/codeblock/engine/geometry.cpp
+1414847527 source:/home/linzhe/Working/codeblock/engine/geometry.cpp
 	"geometry.h"
 
-1414717603 /home/linzhe/Working/codeblock/engine/geometry.h
+1414808013 /home/linzhe/Working/codeblock/engine/geometry.h
 	<GL/glew.h>
 	<GL/freeglut.h>
 	<SOIL/SOIL.h>
@@ -11,8 +11,9 @@
 	<glm/gtc/type_ptr.hpp>
 	<math.h>
 	<iostream>
+	<vector>
 
-1414551647 source:/home/linzhe/Working/codeblock/engine/main.cpp
+1414847612 source:/home/linzhe/Working/codeblock/engine/main.cpp
 	<stdio.h>
 	<stdlib.h>
 	<assert.h>
@@ -23,9 +24,11 @@
 	<GL/glew.h>
 	<GL/freeglut.h>
 	"common/shader_utils.h"
+	<SOIL/SOIL.h>
 	"geometry.h"
 	"scene.h"
 	"render.h"
+	"view.h"
 
 1414350548 /home/linzhe/Working/codeblock/engine/mainWindow.h
 	<stdio.h>
@@ -63,7 +66,7 @@
 	<stdlib.h>
 	<GL/glew.h>
 
-1414628729 /home/linzhe/Working/codeblock/engine/scene.h
+1414807402 /home/linzhe/Working/codeblock/engine/scene.h
 	<GL/glew.h>
 	<GL/freeglut.h>
 	"common/shader_utils.h"
@@ -79,10 +82,10 @@
 	<GL/glew.h>
 	<GL/freeglut.h>
 
-1414550037 source:/home/linzhe/Working/codeblock/engine/render.cpp
+1414723173 source:/home/linzhe/Working/codeblock/engine/render.cpp
 	"render.h"
 
-1414581460 source:/home/linzhe/Working/codeblock/engine/scene.cpp
+1414807517 source:/home/linzhe/Working/codeblock/engine/scene.cpp
 	"scene.h"
 
 1414630623 /home/linzhe/Working/codeblock/engine/view.h

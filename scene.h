@@ -15,6 +15,7 @@
 
 extern const char* VERTEX;
 extern const char* COLOR;
+extern const char* TEXTURE_UV;
 
 
 class Shader:public Object

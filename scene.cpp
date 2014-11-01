@@ -2,6 +2,7 @@
 
 const char* VERTEX = "vertex";
 const char* COLOR = "color";
+const char* TEXTURE_UV = "texture_uv";
 
 
 
@@ -18,6 +19,7 @@ int Shader::initShader(const char* vshader, const char* fshader)
   glAttachShader(program, fs);
   glBindAttribLocation(program, 0, VERTEX);
   glBindAttribLocation(program, 1, COLOR);
+  glBindAttribLocation(program, 2, TEXTURE_UV);
   glLinkProgram(program);
   glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
 

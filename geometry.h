@@ -31,8 +31,9 @@ class Object2D : public Object
 	protected:
 		glm::mat4 matrix;
 		GLuint vao;
-		GLuint vbo[3];
+		GLuint vbo[4];
 		GLuint ibo;
+		GLuint textureID;
 	public:
 
 		Object2D(){matrix = glm::mat4(1.0);}
@@ -42,6 +43,7 @@ class Object2D : public Object
 		void scale(glm::mat4 &sc) {matrix *= sc;}
 
 		float* get_matrix() { return glm::value_ptr(matrix);}
+		void add_texture(const char* file);
 
 		GLuint VAO() {return vao;}
 		~Object2D();

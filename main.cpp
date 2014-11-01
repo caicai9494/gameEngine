@@ -13,6 +13,8 @@
 #include <GL/freeglut.h>
 #include "common/shader_utils.h"
 
+#include <SOIL/SOIL.h>
+
 #include "geometry.h"
 #include "scene.h"
 #include "render.h"
@@ -68,15 +70,19 @@ int main(int argc, char* argv[]) {
 int init_resources()
 {
 
+    Triangle *tri = new Triangle();
+    tri->make_mesh();
+    tri->add_texture("texture/text01.jpg");
 
     Cube *c = new Cube();
     c->make_mesh();
 
     Square *sq = new Square();
     sq->make_mesh();
+    //sq->add_texture("texture/text01.jpg");
 
     Cylinder *cyl = new Cylinder();
-    cyl->make_mesh(2.0, 0.1, 3, 80);
+    cyl->make_mesh(4.0, 1, 3, 50);
 
     Circle *cic = new Circle();
     cic->make_mesh(2, 40);
@@ -94,7 +100,7 @@ int init_resources()
 
     Scene *sc = new Scene();
     assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
-    sc->addChild(cyl);
+    sc->addChild(tri);
 
     myscene = sc;
 
@@ -102,6 +108,8 @@ int init_resources()
     //GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
     //assert(loc != -1);
      //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(vvv));
+
+
 
 }
 
@@ -121,6 +129,12 @@ void onDisplay()
       glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
       */
 
+  glUseProgram(myscene->Program());
+  GLint text1 = glGetUniformLocation(myscene->Program(), "texture0");
+  glUniform1i(text1, 0);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, text1);
+     
   Render *r = new Render(myscene); 
   r->drawScene();
 
@@ -134,7 +148,7 @@ void onIdle()
   glm::mat4 anim = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis_y);
 
   glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -4.0));
-  glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
+  glm::mat4 view = glm::lookAt(glm::vec3(0.0, 6.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
   glm::mat4 projection = glm::perspective(45.0f, 1.0f*WIDTH/HEIGHT, 0.1f, 10.0f);
 
   glm::mat4 mvp = projection * view * model * anim;
