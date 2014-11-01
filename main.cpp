@@ -19,6 +19,7 @@
 #include "scene.h"
 #include "render.h"
 #include "view.h"
+#include "texture.h"
 
 Scene *myscene;
 
@@ -69,23 +70,26 @@ int main(int argc, char* argv[]) {
 
 int init_resources()
 {
+    Texture *tex = new Texture();
+    tex->load_texture("texture/text01.jpg");
 
     Triangle *tri = new Triangle();
     tri->make_mesh();
-    tri->add_texture("texture/text01.jpg");
 
     Cube *c = new Cube();
     c->make_mesh();
 
     Square *sq = new Square();
     sq->make_mesh();
-    //sq->add_texture("texture/text01.jpg");
 
     Cylinder *cyl = new Cylinder();
     cyl->make_mesh(4.0, 1, 3, 50);
 
     Circle *cic = new Circle();
     cic->make_mesh(2, 40);
+
+    Sphere *sp = new Sphere();
+    sp->make_mesh(2, 20, 20);
 
     View *camera = new View();
     glm::vec3 eye(0,1,-2);
@@ -99,8 +103,9 @@ int init_resources()
     //tri->rotate(glm::rotate(glm::mat4(1.0), 45.0, xaxis));
 
     Scene *sc = new Scene();
-    assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
-    sc->addChild(tri);
+    //assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
+    assert(sc->initShader("shader/color.v.glsl", "shader/color.f.glsl") == 1);
+    sc->addChild(sp);
 
     myscene = sc;
 

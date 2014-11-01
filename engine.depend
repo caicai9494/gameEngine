@@ -2,10 +2,9 @@
 1414847527 source:/home/linzhe/Working/codeblock/engine/geometry.cpp
 	"geometry.h"
 
-1414808013 /home/linzhe/Working/codeblock/engine/geometry.h
+1414849941 /home/linzhe/Working/codeblock/engine/geometry.h
 	<GL/glew.h>
 	<GL/freeglut.h>
-	<SOIL/SOIL.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/type_ptr.hpp>
@@ -77,7 +76,7 @@
 	"view.h"
 	<vector>
 
-1414549634 /home/linzhe/Working/codeblock/engine/render.h
+1414849029 /home/linzhe/Working/codeblock/engine/render.h
 	"scene.h"
 	<GL/glew.h>
 	<GL/freeglut.h>
@@ -90,4 +89,11 @@
 
 1414630623 /home/linzhe/Working/codeblock/engine/view.h
 	"geometry.h"
+
+1414849202 source:/home/linzhe/Working/codeblock/engine/texture.cpp
+	"texture.h"
+
+1414849241 /home/linzhe/Working/codeblock/engine/texture.h
+	"geometry.h"
+	<SOIL/SOIL.h>
 

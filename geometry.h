@@ -4,7 +4,6 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-#include <SOIL/SOIL.h>
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -28,12 +27,15 @@ class Object
 
 class Object2D : public Object
 {
+    	private:
+	    	void bindVAO();
+	    	void bindVBO(vectorFloat &data, int id, int size, int offset);
+		void bindIBO(vectorFloat &data);
 	protected:
 		glm::mat4 matrix;
 		GLuint vao;
 		GLuint vbo[4];
 		GLuint ibo;
-		GLuint textureID;
 	public:
 
 		Object2D(){matrix = glm::mat4(1.0);}
@@ -43,7 +45,6 @@ class Object2D : public Object
 		void scale(glm::mat4 &sc) {matrix *= sc;}
 
 		float* get_matrix() { return glm::value_ptr(matrix);}
-		void add_texture(const char* file);
 
 		GLuint VAO() {return vao;}
 		~Object2D();
@@ -84,6 +85,13 @@ class Cylinder : public Object2D
     public:
 	void make_mesh(float height, float up_radius, float down_radius, int hstack);
 	~Cylinder(){}
+};
+
+class Sphere : public Object2D
+{
+    public:
+	void make_mesh(float radius, int hstack, int vstack);
+	~Sphere(){}
 };
 
 #endif
