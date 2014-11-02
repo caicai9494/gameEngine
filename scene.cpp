@@ -3,6 +3,7 @@
 const char* VERTEX = "vertex";
 const char* COLOR = "color";
 const char* TEXTURE_UV = "texture_uv";
+const char* NORMAL = "normal";
 
 
 
@@ -30,6 +31,13 @@ int Shader::initShader(const char* vshader, const char* fshader)
   }
   else 
 	  return 1;
+}
+
+SceneNode::SceneNode(Object2D *obj, Shader *shader)
+{
+    _obj = obj;
+    _shader = shader;
+    _matrix = mat4(1.0f);
 }
 
 

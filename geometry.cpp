@@ -2,10 +2,14 @@
 
 void Object2D::bindVAO()
 {
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	glBindVertexArray(0);
 }
 
 void Object2D::bindVBO(vectorFloat &data, int id, int size, int offset)
 {
+    	glGenBuffers(1, &vbo[id]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[id]);
 	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(GLfloat), &data[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(
@@ -14,10 +18,19 @@ void Object2D::bindVBO(vectorFloat &data, int id, int size, int offset)
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		0,                  // stride
-		(void*)offset            // array buffer offset
+		(void*)0            // array buffer offset
 	);
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(id);
 }
+
+void Object2D::bindIBO(vectorUbyte &data)
+{
+
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(GLubyte), &data[0], GL_STATIC_DRAW);
+}
+
 void Triangle::make_mesh()
 {
 	glGenVertexArrays(1, &vao);
@@ -29,6 +42,8 @@ void Triangle::make_mesh()
 		 1.0f, -1.0f, 0.0f,
 		 0.0f,  1.0f, 0.0f,
 	};
+
+	//vectorFloat vtest(g_vertex_buffer_data);
 
 	GLfloat g_color_buffer_data[] = {
 		1.0f, 0.0f, 0.0f,
@@ -93,7 +108,7 @@ void Triangle::make_mesh()
 	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 Object2D::~Object2D()
@@ -317,6 +332,101 @@ void Cube::make_mesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void Cylinder::make_mesh(float height, float radius, int hstack)
+{
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	vectorFloat g_vertex_buffer_data;
+	vectorFloat g_color_buffer_data;
+	vectorFloat g_uv_buffer_data;
+	vectorUbyte cylinder_elements;
+
+
+	float seg_angle = 2.0 * M_PI / hstack;
+	
+
+	for(int h = 0; h < 2*hstack; h++)
+	{
+	        int sign = (h < hstack)? 1.0 : -1.0;
+
+		g_vertex_buffer_data.push_back(radius * cos(seg_angle * h));
+		g_vertex_buffer_data.push_back(sign * height / 2.0);
+		g_vertex_buffer_data.push_back(radius * sin(seg_angle * h));
+
+		g_color_buffer_data.push_back(1);
+		g_color_buffer_data.push_back(0);
+		g_color_buffer_data.push_back(0);
+
+
+		g_uv_buffer_data.push_back(1.0 / h);
+		g_uv_buffer_data.push_back(sign/2 + 0.5);
+	}
+
+	for(int h = 0; h < hstack; h++)
+	{
+		cylinder_elements.push_back(0 * (hstack) + h);
+		cylinder_elements.push_back((0+1)*(hstack) + h);
+		cylinder_elements.push_back((0+1)*(hstack) + (h+1) % hstack);
+
+		cylinder_elements.push_back(0 * (hstack) + h);
+		cylinder_elements.push_back((0+1)*(hstack) + (h+1)%hstack);
+		cylinder_elements.push_back(0*(hstack) + (h+1)%hstack);
+	}
+
+
+
+
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cylinder_elements.size() * sizeof(GLubyte), &cylinder_elements[0], GL_STATIC_DRAW);
+
+	glGenBuffers(3, vbo);
+
+	/////////////1st buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(GLfloat), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(0);
+	//////
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, g_color_buffer_data.size()*sizeof(GLfloat), &g_color_buffer_data[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, g_uv_buffer_data.size()*sizeof(GLfloat), &g_uv_buffer_data[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		2,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		2,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+
 void Cylinder::make_mesh(float height, float up_radius, float down_radius, int hstack)
 {
 	glGenVertexArrays(1, &vao);
@@ -344,52 +454,6 @@ void Cylinder::make_mesh(float height, float up_radius, float down_radius, int h
 		g_color_buffer_data.push_back(0);
 	}
 
-	/*
-	for(int v = 0; v < vstack; v++)
-	{
-	    for(int h = 0; h < hstack; h++)
-	    {
-		g_vertex_buffer_data.push_back(radius * cos(seg_angle * h));
-		g_vertex_buffer_data.push_back(height / 2.0 - seg_height * v);
-		g_vertex_buffer_data.push_back(radius * sin(seg_angle * h));
-
-		g_color_buffer_data.push_back(1);
-		g_color_buffer_data.push_back(0);
-		g_color_buffer_data.push_back(0);
-		g_vertex_buffer_data[h * vstack + v + 0] = cos(seg_angle * h);
-		g_vertex_buffer_data[h * 3*vstack + v] [ 1] = height / 2.0 - seg_height * v;
-		g_vertex_buffer_data[h * 3*vstack + v] [ 2] = sin(seg_angle * h);
-
-	    }
-	}
-	*/
-
-	/*
-		cylinder_elements.push_back(0);
-		cylinder_elements.push_back(1);
-		cylinder_elements.push_back(vstack+1);
-
-		cylinder_elements.push_back(0);
-		cylinder_elements.push_back(vstack+1);
-		cylinder_elements.push_back(vstack);
-		*/
-
-	/*
-	for(int v = 0; v < vstack-1; v++)
-	{
-	    for(int h = 0; h < hstack; h++)
-	    {
-		cylinder_elements.push_back(v * (hstack) + h);
-		cylinder_elements.push_back((v+1)*(hstack) + (h+1) % hstack);
-		cylinder_elements.push_back((v+1)*(hstack) + h);
-
-		cylinder_elements.push_back(v * (hstack) + h);
-		cylinder_elements.push_back(v*(hstack) + (h+1)%hstack);
-		cylinder_elements.push_back((v+1)*(hstack) + (h+1)%hstack);
-
-	    }
-	}
-	*/
 	for(int h = 0; h < hstack; h++)
 	{
 		cylinder_elements.push_back(0 * (hstack) + h);
@@ -527,8 +591,8 @@ void Sphere::make_mesh(float radius, int hstack, int vstack)
 	vectorFloat g_normal_buffer_data;
 	vectorUbyte circle_elements;
 
-	hstack = 20;
-	vstack = 20;
+	//hstack = 20;
+	//vstack = 20;
 
 	float seg_h_angle = 2.0 * M_PI / hstack; 
 	float seg_v_angle =  M_PI / vstack; 
@@ -602,19 +666,17 @@ void Sphere::make_mesh(float radius, int hstack, int vstack)
 	);
 	glEnableVertexAttribArray(1);
 
-	/*
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, g_color_buffer_data.size() * sizeof(GLfloat),  &g_color_buffer_data[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+	glBufferData(GL_ARRAY_BUFFER, g_normal_buffer_data.size() * sizeof(GLfloat),  &g_normal_buffer_data[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(
-		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
-	glEnableVertexAttribArray(1);
-	*/
+	glEnableVertexAttribArray(3);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

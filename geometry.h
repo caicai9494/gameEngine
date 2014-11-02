@@ -30,7 +30,7 @@ class Object2D : public Object
     	private:
 	    	void bindVAO();
 	    	void bindVBO(vectorFloat &data, int id, int size, int offset);
-		void bindIBO(vectorFloat &data);
+		void bindIBO(vectorUbyte &data);
 	protected:
 		glm::mat4 matrix;
 		GLuint vao;
@@ -83,14 +83,15 @@ class Cube : public Object2D
 class Cylinder : public Object2D
 {
     public:
-	void make_mesh(float height, float up_radius, float down_radius, int hstack);
+	void make_mesh(float height, float up_radius, float down_radius, int hstack = 50);
+	void make_mesh(float height, float radius, int hstack = 50);
 	~Cylinder(){}
 };
 
 class Sphere : public Object2D
 {
     public:
-	void make_mesh(float radius, int hstack, int vstack);
+	void make_mesh(float radius, int hstack = 20, int vstack = 20);
 	~Sphere(){}
 };
 

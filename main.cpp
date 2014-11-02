@@ -21,7 +21,7 @@
 #include "view.h"
 #include "texture.h"
 
-Scene *myscene;
+SceneNode *myscene;
 
 int init_resources();
 void onDisplay();
@@ -71,25 +71,59 @@ int main(int argc, char* argv[]) {
 int init_resources()
 {
     Texture *tex = new Texture();
+    tex->load_texture("texture/textmarble.jpg");
+
+    Texture *tex2 = new Texture();
     tex->load_texture("texture/text01.jpg");
+
+    Texture *tex3 = new Texture();
+    tex->load_texture("texture/blackwhite.jpeg");
+
+    Shader *colorShader = new Shader();
+    assert(colorShader->initShader("shader/color.v.glsl", "shader/color.f.glsl") == 1);
+
+
+    Shader *textShader = new Shader();
+    assert(textShader->initShader("shader/texture.v.glsl", "shader/texture.f.glsl") == 1);
+
+    Cylinder *cyl = new Cylinder();
+    cyl->make_mesh(2*M_PI, 1);
+    SceneNode *root = new SceneNode(cyl, textShader);
+
+    Sphere *sp = new Sphere();
+    sp->make_mesh(3);
+    SceneNode *spnode = new SceneNode(sp, colorShader);
+    root->addChild(spnode);
+
+    /*
+    Square *sq = new Square();
+    sq->make_mesh();
+    SceneNode *root = new SceneNode(sq, textShader);
 
     Triangle *tri = new Triangle();
     tri->make_mesh();
+    SceneNode *trinode = new SceneNode(tri, colorShader);
+    root->addChild(trinode);
 
     Cube *c = new Cube();
     c->make_mesh();
+    SceneNode *cubenode = new SceneNode(c, colorShader);
+    root->addChild(cubenode);
 
-    Square *sq = new Square();
-    sq->make_mesh();
 
     Cylinder *cyl = new Cylinder();
     cyl->make_mesh(4.0, 1, 3, 50);
+    SceneNode *cylnode = new SceneNode(cyl, colorShader);
+    root->addChild(cylnode);
 
     Circle *cic = new Circle();
     cic->make_mesh(2, 40);
 
     Sphere *sp = new Sphere();
-    sp->make_mesh(2, 20, 20);
+    sp->make_mesh(3);
+    SceneNode *spnode = new SceneNode(sp, colorShader);
+    cylnode->addChild(spnode);
+    */
 
     View *camera = new View();
     glm::vec3 eye(0,1,-2);
@@ -102,12 +136,12 @@ int init_resources()
    // glm::vec3 xaxis(1.0, 0.0, 0.0);
     //tri->rotate(glm::rotate(glm::mat4(1.0), 45.0, xaxis));
 
-    Scene *sc = new Scene();
+    //Scene *sc = new Scene();
     //assert(sc->initShader("shader/triangle.v.glsl", "shader/triangle.f.glsl") == 1);
-    assert(sc->initShader("shader/color.v.glsl", "shader/color.f.glsl") == 1);
-    sc->addChild(sp);
+    //assert(sc->initShader("shader/color.v.glsl", "shader/color.f.glsl") == 1);
+    //sc->addChild(sp);
 
-    myscene = sc;
+    myscene = root;
 
 
     //GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
@@ -134,20 +168,21 @@ void onDisplay()
       glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
       */
 
-  glUseProgram(myscene->Program());
-  GLint text1 = glGetUniformLocation(myscene->Program(), "texture0");
+  glUseProgram(myscene->get_program());
+  GLint text1 = glGetUniformLocation(myscene->get_program(), "texture0");
   glUniform1i(text1, 0);
-  glActiveTexture(GL_TEXTURE0);
+  glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, text1);
      
   Render *r = new Render(myscene); 
-  r->drawScene();
+  r->drawScene(myscene);
 
   glutSwapBuffers();
 }
 
 void onIdle()
 {
+
   float angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * 45;  // 45° per second
   glm::vec3 axis_y(0, 1, 0);
   glm::mat4 anim = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis_y);
@@ -158,29 +193,15 @@ void onIdle()
 
   glm::mat4 mvp = projection * view * model * anim;
 
-  glUseProgram(myscene->Program());
-  GLint loc = glGetUniformLocation(myscene->Program(), "mvp");
+
+  glUseProgram(myscene->get_program());
+  GLint loc = glGetUniformLocation(myscene->get_program(), "mvp");
+  glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+  glUseProgram(myscene->childAt(0)->get_program());
+  loc = glGetUniformLocation(myscene->get_program(), "mvp");
   //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
   glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
-  /*
-  float alpha = sinf(glutGet(GLUT_ELAPSED_TIME) / 1000.0 * (2*M_PI) / 5) + 0.5;
-  float angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 ;
-  glm::vec3 yaxis(0,1,0);
-
-  glm::mat4 v = glm::lookAt(glm::vec3(0,0,1), glm::vec3(0,0,0), glm::vec3(0,1,0));
-  glm::mat4 mvp = glm::rotate(glm::mat4(1.0f), angle, yaxis);
-
-  glUseProgram(myscene->Program());
-  GLint loc = glGetUniformLocation(myscene->Program(), "alpha");
-  if(loc != -1)
-      //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
-      glUniform1f(loc, 1.0);
-
-  loc = glGetUniformLocation(myscene->Program(), "mvp");
-  if(loc != -1)
-      glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(v * mvp));
-      //glUniform1f(loc, alpha);
-      */
 
 
   glutPostRedisplay();

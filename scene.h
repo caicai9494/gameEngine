@@ -10,12 +10,18 @@
 #include "view.h"
 #include <vector>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #ifndef __SCENE
 #define __SCENE
 
 extern const char* VERTEX;
 extern const char* COLOR;
 extern const char* TEXTURE_UV;
+extern const char* NORMAL;
 
 
 class Shader:public Object
@@ -50,5 +56,38 @@ class Scene : public Shader
 
 	~Scene(){}
 };
+
+
+class SceneNode : public Object
+{
+    private:
+    	typedef std::vector<SceneNode*> vectorScene;
+	typedef glm::mat4 mat4;
+    	Shader *_shader;
+    	Object2D *_obj;
+	vectorScene _sceneList;
+	mat4 _matrix;
+	
+    public:
+	SceneNode(Object2D *obj, Shader* shader);
+
+	Object2D* get_object() { return _obj;}
+	SceneNode* childAt(int index) {return _sceneList.at(index);}
+	void addChild(SceneNode *node){_sceneList.push_back(node);}
+	int length() {return _sceneList.size();}
+
+	void set_shader(Shader *shader) { _shader = shader;}
+	GLuint get_program() { return _shader->Program();}
+
+
+	void translate(glm::mat4 &tr) {_matrix *= tr;}
+	void rotate(glm::mat4 &rt) {_matrix *= rt;}
+	void scale(glm::mat4 &sc) {_matrix *= sc;}
+	mat4& get_matrix() {return _matrix;}
+
+	~SceneNode(){}
+
+};
+
 
 #endif
