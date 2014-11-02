@@ -340,6 +340,7 @@ void Cylinder::make_mesh(float height, float radius, int hstack)
 	vectorFloat g_vertex_buffer_data;
 	vectorFloat g_color_buffer_data;
 	vectorFloat g_uv_buffer_data;
+	vectorFloat g_normal_buffer_data;
 	vectorUbyte cylinder_elements;
 
 
@@ -354,6 +355,10 @@ void Cylinder::make_mesh(float height, float radius, int hstack)
 		g_vertex_buffer_data.push_back(sign * height / 2.0);
 		g_vertex_buffer_data.push_back(radius * sin(seg_angle * h));
 
+		g_normal_buffer_data.push_back(radius * cos(seg_angle * h));
+		g_normal_buffer_data.push_back(0);
+		g_normal_buffer_data.push_back(radius * sin(seg_angle * h));
+
 		g_color_buffer_data.push_back(1);
 		g_color_buffer_data.push_back(0);
 		g_color_buffer_data.push_back(0);
@@ -361,6 +366,7 @@ void Cylinder::make_mesh(float height, float radius, int hstack)
 
 		g_uv_buffer_data.push_back(1.0 / h);
 		g_uv_buffer_data.push_back(sign/2 + 0.5);
+
 	}
 
 	for(int h = 0; h < hstack; h++)
@@ -381,7 +387,7 @@ void Cylinder::make_mesh(float height, float radius, int hstack)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cylinder_elements.size() * sizeof(GLubyte), &cylinder_elements[0], GL_STATIC_DRAW);
 
-	glGenBuffers(3, vbo);
+	glGenBuffers(4, vbo);
 
 	/////////////1st buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
@@ -421,6 +427,18 @@ void Cylinder::make_mesh(float height, float radius, int hstack)
 		(void*)0            // array buffer offset
 	);
 	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+	glBufferData(GL_ARRAY_BUFFER, g_normal_buffer_data.size()*sizeof(GLfloat), &g_normal_buffer_data[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(
+		3,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	glEnableVertexAttribArray(3);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

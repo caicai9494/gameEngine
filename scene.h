@@ -8,6 +8,7 @@
 
 #include "geometry.h"
 #include "view.h"
+#include "texture.h"
 #include <vector>
 
 #define GLM_FORCE_RADIANS
@@ -67,9 +68,11 @@ class SceneNode : public Object
     	Object2D *_obj;
 	vectorScene _sceneList;
 	mat4 _matrix;
+	//GLenum _texture;
+	Texture *_texture;
 	
     public:
-	SceneNode(Object2D *obj, Shader* shader);
+	SceneNode(Object2D *obj, Shader* shader, Texture *text = NULL);
 
 	Object2D* get_object() { return _obj;}
 	SceneNode* childAt(int index) {return _sceneList.at(index);}
@@ -84,6 +87,8 @@ class SceneNode : public Object
 	void rotate(glm::mat4 &rt) {_matrix *= rt;}
 	void scale(glm::mat4 &sc) {_matrix *= sc;}
 	mat4& get_matrix() {return _matrix;}
+
+	Texture* get_texture() {return _texture;}
 
 	~SceneNode(){}
 

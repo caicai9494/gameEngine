@@ -1,6 +1,15 @@
 
 #include "texture.h"
 
+Texture::Texture(const char* path)
+{
+    load_texture(path);
+
+    count++;
+}
+
+int Texture::count = 0;
+
 void Texture::load_texture(const char* path)
 {
     int img_w, img_h;

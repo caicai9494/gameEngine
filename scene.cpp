@@ -33,11 +33,12 @@ int Shader::initShader(const char* vshader, const char* fshader)
 	  return 1;
 }
 
-SceneNode::SceneNode(Object2D *obj, Shader *shader)
+SceneNode::SceneNode(Object2D *obj, Shader *shader, Texture* text)
 {
     _obj = obj;
     _shader = shader;
     _matrix = mat4(1.0f);
+    _texture = text;
 }
 
 

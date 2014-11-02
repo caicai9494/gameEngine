@@ -22,6 +22,7 @@
 #include "texture.h"
 
 SceneNode *myscene;
+Render *myrender;
 
 int init_resources();
 void onDisplay();
@@ -70,14 +71,11 @@ int main(int argc, char* argv[]) {
 
 int init_resources()
 {
-    Texture *tex = new Texture();
-    tex->load_texture("texture/textmarble.jpg");
+    Texture *tex = new Texture("texture/textmarble.jpg");
 
-    Texture *tex2 = new Texture();
-    tex->load_texture("texture/text01.jpg");
+    Texture *tex2 = new Texture("texture/text01.jpg");
 
-    Texture *tex3 = new Texture();
-    tex->load_texture("texture/blackwhite.jpeg");
+    Texture *tex3 = new Texture("texture/blackwhite.jpeg");
 
     Shader *colorShader = new Shader();
     assert(colorShader->initShader("shader/color.v.glsl", "shader/color.f.glsl") == 1);
@@ -88,11 +86,14 @@ int init_resources()
 
     Cylinder *cyl = new Cylinder();
     cyl->make_mesh(2*M_PI, 1);
-    SceneNode *root = new SceneNode(cyl, textShader);
+    SceneNode *root = new SceneNode(cyl, textShader, tex2);
+
 
     Sphere *sp = new Sphere();
     sp->make_mesh(3);
     SceneNode *spnode = new SceneNode(sp, colorShader);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, -3.0, 0.0));
+    spnode->translate(model);
     root->addChild(spnode);
 
     /*
@@ -168,14 +169,18 @@ void onDisplay()
       glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
       */
 
+ /* 
   glUseProgram(myscene->get_program());
   GLint text1 = glGetUniformLocation(myscene->get_program(), "texture0");
   glUniform1i(text1, 0);
-  glActiveTexture(GL_TEXTURE2);
+  glActiveTexture(GL_TEXTURE9);
   glBindTexture(GL_TEXTURE_2D, text1);
+  */
+
      
-  Render *r = new Render(myscene); 
-  r->drawScene(myscene);
+  myrender = new Render(myscene); 
+  myrender->drawTexture(myscene);
+  myrender->drawScene(myscene);
 
   glutSwapBuffers();
 }
@@ -194,6 +199,7 @@ void onIdle()
   glm::mat4 mvp = projection * view * model * anim;
 
 
+  /*
   glUseProgram(myscene->get_program());
   GLint loc = glGetUniformLocation(myscene->get_program(), "mvp");
   glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -202,6 +208,8 @@ void onIdle()
   loc = glGetUniformLocation(myscene->get_program(), "mvp");
   //glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
   glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mvp));
+  */
+  myrender->buildMatrix(myscene, mvp);
 
 
   glutPostRedisplay();

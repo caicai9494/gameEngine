@@ -17,6 +17,7 @@ class Render : public Object
 	void drawScene();
 	void drawScene(SceneNode *sn);
 	void buildMatrix(SceneNode *sn, mat4 stack = mat4(1.0f));
+	void drawTexture(SceneNode *sn);
 
 	~Render() {delete _scene;}
 };
