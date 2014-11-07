@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include "common/shader_utils.h"
 
 #include <stdio.h>
@@ -70,6 +69,7 @@ class SceneNode : public Object
 	mat4 _matrix;
 	//GLenum _texture;
 	Texture *_texture;
+	//bool _keepMatrix;
 	
     public:
 	SceneNode(Object2D *obj, Shader* shader, Texture *text = NULL);

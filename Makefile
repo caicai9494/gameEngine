@@ -1,4 +1,5 @@
-LDLIBS=-lglut -lGLEW -lGL -lSOIL 
+#LDLIBS=-lglut -lGLEW -lGL -lSOIL -lGL -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi
+LDLIBS=-lSOIL -lGLEW -lGL -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi
 CFLAGs=-c -Wall -g -O
 SRC= render.cpp main.cpp geometry.cpp scene.cpp view.cpp texture.cpp
 OBJ=$(SRC:.cpp=.o)

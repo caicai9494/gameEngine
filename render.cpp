@@ -45,7 +45,7 @@ void Render::drawScene(SceneNode* sn)
     	return;
 }
 
-void Render::buildMatrix(SceneNode *sn, mat4 stack)
+void Render::buildMatrix(SceneNode *sn, mat4 stack, bool keep)
 {   
     
     mat4 mvp = stack * sn->get_matrix();
@@ -58,7 +58,12 @@ void Render::buildMatrix(SceneNode *sn, mat4 stack)
     {
 
 	for(int i = 0; i < sceneLength; i++)
-	    buildMatrix(sn->childAt(i), mvp);
+	{
+	    if(keep)
+	    	buildMatrix(sn->childAt(i), mvp);
+	    else
+	    	buildMatrix(sn->childAt(i), stack);
+	}
 
     }
     else
@@ -70,12 +75,13 @@ void Render::drawTexture(SceneNode *sn)
   Texture *text = sn->get_texture();
   if(sn->get_texture() != NULL)
   {
-  glUseProgram(sn->get_program());
-  text->textureUniform = glGetUniformLocation(sn->get_program(), "texture0");
-  //glUniform1i(text->textureUniform, 0);
- // glActiveTexture(GL_TEXTURE0 + text->get_count());
-  glActiveTexture(GL_TEXTURE0 + 1);
-  glBindTexture(GL_TEXTURE_2D, text->textureUniform);
+  	glUseProgram(sn->get_program());
+  	text->textureUniform = glGetUniformLocation(sn->get_program(), "texture0");
+  	//glUniform1i(text->textureUniform, text->get_count());
+  	//glActiveTexture(GL_TEXTURE0 + text->get_count());
+	glUniform1i(text->textureUniform, 2);
+  	glActiveTexture(GL_TEXTURE0 +2);
+  	glBindTexture(GL_TEXTURE_2D, text->textureUniform);
   }
 
     int sceneLength = sn->length();

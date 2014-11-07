@@ -3,7 +3,6 @@
 #include "scene.h"
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 
 class Render : public Object
 {
@@ -16,7 +15,7 @@ class Render : public Object
 	Render(SceneNode *sn){ _sceneNode = sn;}
 	void drawScene();
 	void drawScene(SceneNode *sn);
-	void buildMatrix(SceneNode *sn, mat4 stack = mat4(1.0f));
+	void buildMatrix(SceneNode *sn, mat4 stack = mat4(1.0f), bool keep = true);
 	void drawTexture(SceneNode *sn);
 
 	~Render() {delete _scene;}
