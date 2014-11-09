@@ -1,8 +1,24 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
+#include <GL/glew.h>
+#include "common/shader_utils.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include "geometry.h"
+#include "view.h"
+#include "texture.h"
+#include <vector>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "scene.h"
 
-#include <GL/glew.h>
 
 class Render : public Object
 {
